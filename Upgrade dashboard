@@ -1,0 +1,158 @@
+{
+  "app": {
+    "name": "ARC Command Center",
+    "type": "web3_operating_system",
+    "theme": "neon_dark",
+    "layout": "modular_grid_os",
+    "version": "1.2"
+  },
+
+  "network": {
+    "enabled": true,
+    "active_chains": [
+      {
+        "name": "Arc Testnet",
+        "chainId": "5042002",
+        "rpc": "https://rpc.testnet.arc.network",
+        "explorer": "https://testnet.arcscan.app",
+        "nativeToken": "USDC"
+      },
+      {
+        "name": "Ethereum Sepolia",
+        "chainId": "0xaa36a7",
+        "rpc": "https://sepolia.infura.io/v3/",
+        "explorer": "https://sepolia.etherscan.io",
+        "nativeToken": "ETH"
+      },
+      {
+        "name": "Arbitrum Sepolia",
+        "chainId": "0x66eee",
+        "rpc": "https://sepolia-rollup.arbitrum.io/rpc",
+        "explorer": "https://sepolia.arbiscan.io",
+        "nativeToken": "ETH"
+      }
+    ]
+  },
+
+  "wallet": {
+    "enabled": true,
+    "features": [
+      "connect",
+      "disconnect",
+      "address_display",
+      "balance_multi_chain"
+    ]
+  },
+
+  "tokens": {
+    "enabled": true,
+    "supported_tokens": [
+      {
+        "symbol": "USDC",
+        "name": "USD Coin",
+        "type": "stablecoin",
+        "networks": ["Arc Testnet", "Sepolia", "Arbitrum Sepolia"]
+      },
+      {
+        "symbol": "EURC",
+        "name": "Euro Coin",
+        "type": "stablecoin",
+        "networks": ["Sepolia", "Arbitrum Sepolia"]
+      },
+      {
+        "symbol": "cbBTC",
+        "name": "Coinbase Wrapped BTC",
+        "type": "wrapped_bitcoin",
+        "networks": ["Arbitrum Sepolia", "Sepolia"]
+      }
+    ]
+  },
+
+  "dashboard": {
+    "mode": "command_os",
+
+    "panels": [
+      {
+        "id": "wallet_terminal",
+        "type": "multi_chain_wallet",
+        "position": "left_top"
+      },
+
+      {
+        "id": "chain_switch_matrix",
+        "type": "advanced_chain_switcher",
+        "position": "right_top",
+        "features": [
+          "instant_switch",
+          "auto_detect_network",
+          "rpc_fallback"
+        ]
+      },
+
+      {
+        "id": "token_console",
+        "type": "multi_token_terminal",
+        "position": "center",
+        "features": [
+          "token_balance_view",
+          "token_transfer",
+          "token_approval"
+        ]
+      },
+
+      {
+        "id": "transaction_console",
+        "type": "live_tx_terminal",
+        "position": "center_bottom",
+        "features": [
+          "send_transaction",
+          "tx_hash_tracking",
+          "block_confirmation"
+        ]
+      }
+    ]
+  },
+
+  "swap_engine": {
+    "enabled": true,
+    "supported_tokens": ["USDC", "EURC", "cbBTC", "ETH"],
+    "routing": "0x_api_or_uniswap_v3",
+    "mode": "best_price_execution"
+  },
+
+  "bridge": {
+    "enabled": true,
+    "supported_networks": [
+      "Arc Testnet",
+      "Ethereum Sepolia",
+      "Arbitrum Sepolia"
+    ],
+    "protocols": ["LayerZero", "Wormhole"]
+  },
+
+  "liquidity": {
+    "enabled": true,
+    "pairs": [
+      "USDC/ETH",
+      "USDC/EURC",
+      "cbBTC/ETH"
+    ]
+  },
+
+  "stake": {
+    "enabled": true,
+    "tokens": ["USDC", "ARC", "ETH"],
+    "rewards": "dynamic_yield_model"
+  },
+
+  "real_time_layer": {
+    "tx_streaming": true,
+    "multi_chain_listener": true,
+    "balance_sync": true
+  },
+
+  "ui": {
+    "style": "cyber_neon_terminal",
+    "interaction": ["click", "command_palette", "hotkeys"]
+  }
+}
