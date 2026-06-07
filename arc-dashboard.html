@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>ARC Command Center</title>
+
+<script src="https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.umd.min.js"></script>
+
+<style>
+body {
+  margin: 0;
+  font-family: monospace;
+  background: #0b0f19;
+  color: #00f5ff;
+}
+
+.header {
+  padding: 20px;
+  text-align: center;
+  font-size: 22px;
+  color: #7c3aed;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 10px;
+  padding: 10px;
+}
+
+.card {
+  background: #151c2c;
+  padding: 15px;
+  border-radius: 10px;
+  border: 1px solid #222;
+}
+
+button {
+  padding: 8px;
+  margin: 5px;
+  cursor: pointer;
+  background: #00f5ff;
+  border: none;
+  color: black;
+}
+
+input {
+  padding: 6px;
+  margin: 5px;
+  width: 90%;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">🚀 ARC WEB3 COMMAND CENTER</div>
+
+<div class="grid">
+
+<!-- WALLET -->
+<div class="card">
+<h3>👛 Wallet</h3>
+<button onclick="connectWallet()">Connect</button>
+<p id="wallet">Not Connected</p>
+</div>
+
+<!-- NETWORK SWITCH -->
+<div class="card">
+<h3>🌐 Network Switch</h3>
+<button onclick="switchChain('arc')">Arc</button>
+<button onclick="switchChain('sepolia')">Sepolia</button>
+<button onclick="switchChain('arbitrum')">Arbitrum</button>
+</div>
+
+<!-- TRANSFER -->
+<div class="card">
+<h3>💸 Transfer</h3>
+<input id="to" placeholder="Address"/>
+<input id="amount" placeholder="Amount ETH"/>
+<button onclick="sendTx()">Send</button>
+<p id="tx"></p>
+</div>
+
+<!-- TOKENS -->
+<div class="card">
+<h3>💰 Tokens</h3>
+<ul>
+<li>USDC (Enabled)</li>
+<li>EURC (Enabled)</li>
+<li>cbBTC (Enabled)</li>
+</ul>
+</div>
+
+<!-- SWAP -->
+<div class="card">
+<h3>🔄 Swap</h3>
+<input placeholder="Token A"/>
+<input placeholder="Token B"/>
+<button>Swap</button>
+</div>
+
+<!-- BRIDGE -->
+<div class="card">
+<h3>🌉 Bridge</h3>
+<input placeholder="From Chain"/>
+<input placeholder="To Chain"/>
+<button>Bridge</button>
+</div>
+
+<!-- STAKE -->
+<div class="card">
+<h3>🏦 Stake</h3>
+<input placeholder="Amount"/>
+<button>Stake</button>
+<button>Unstake</button>
+</div>
+
+</div>
+
+<script>
+
+let signer;
+
+// CONNECT WALLET
+async function connectWallet(){
+  if(!window.ethereum){
+    alert("Install MetaMask");
+    return;
+  }
+
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+  signer = await provider.getSigner();
+
+  document.getElementById("wallet").innerText =
+    "Connected: " + await signer.getAddress();
+}
+
+// SWITCH CHAIN
+async function switchChain(chain){
+
+  const chains = {
+    arc: {
+      chainId: "0x4e2b3a",
+      rpc: "https://rpc.testnet.arc.network"
+    },
+    sepolia: {
+      chainId: "0xaa36a7",
+      rpc: "https://sepolia.infura.io/v3/"
+    },
+    arbitrum: {
+      chainId: "0x66eee",
+      rpc: "https://sepolia-rollup.arbitrum.io/rpc"
+    }
+  };
+
+  const c = chains[chain];
+
+  await window.ethereum.request({
+    method: "wallet_addEthereumChain",
+    params: [{
+      chainId: c.chainId,
+      chainName: chain,
+      rpcUrls: [c.rpc],
+      nativeCurrency: {
+        name: "ETH",
+        symbol: "ETH",
+        decimals: 18
+      }
+    }]
+  });
+}
+
+// SEND TX
+async function sendTx(){
+  const to = document.getElementById("to").value;
+  const amount = document.getElementById("amount").value;
+
+  const tx = await signer.sendTransaction({
+    to,
+    value: ethers.parseEther(amount)
+  });
+
+  document.getElementById("tx").innerText =
+    "TX: " + tx.hash;
+}
+
+</script>
+
+</body>
+  </html>
