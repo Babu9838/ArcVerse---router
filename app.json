@@ -1,0 +1,133 @@
+{
+  "app": {
+    "name": "ARC Web3 Production Dashboard",
+    "theme": "dark",
+    "rpc": "https://rpc.testnet.arc.network",
+    "chainId": "5042002"
+  },
+
+  "wallet": {
+    "enabled": true,
+    "features": ["connect", "address_display", "disconnect"]
+  },
+
+  "network": {
+    "enabled": true,
+    "chains": [
+      {
+        "name": "Arc Testnet",
+        "chainId": "0x4e2b3a",
+        "rpc": "https://rpc.testnet.arc.network",
+        "symbol": "USDC",
+        "explorer": "https://testnet.arcscan.app"
+      },
+      {
+        "name": "Ethereum Sepolia",
+        "chainId": "0xaa36a7",
+        "rpc": "https://sepolia.infura.io/v3/",
+        "symbol": "ETH"
+      }
+    ]
+  },
+
+  "modules": {
+    "transfer": {
+      "enabled": true,
+      "type": "native_send",
+      "fields": ["to", "amount"],
+      "supportsTxHash": true
+    },
+
+    "swap": {
+      "enabled": true,
+      "type": "api_integration_ready",
+      "providers": ["0x", "uniswap"],
+      "fields": ["tokenA", "tokenB", "amount"]
+    },
+
+    "bridge": {
+      "enabled": true,
+      "type": "cross_chain",
+      "providers": ["layerzero", "wormhole"],
+      "fields": ["fromChain", "toChain", "amount"]
+    },
+
+    "liquidity": {
+      "enabled": true,
+      "type": "amm_ui",
+      "actions": ["add", "remove"]
+    },
+
+    "stake": {
+      "enabled": true,
+      "type": "staking_contract_ready",
+      "actions": ["stake", "unstake"],
+      "token": "ARC"
+    },
+
+    "dao": {
+      "enabled": true,
+      "type": "governance",
+      "features": [
+        "create_proposal",
+        "vote_yes",
+        "vote_no",
+        "execution_ready"
+      ]
+    }
+  },
+
+  "transaction": {
+    "tracker": true,
+    "showHash": true,
+    "backendEndpoint": "/api/tx",
+    "status": ["pending", "success", "failed"]
+  },
+
+  "social": {
+    "enabled": true,
+    "providers": [
+      "github",
+      "twitter",
+      "discord",
+      "email"
+    ],
+    "authType": "ui_only"
+  },
+
+  "ui": {
+    "layout": "dashboard",
+    "cards": [
+      "wallet",
+      "network",
+      "transfer",
+      "swap",
+      "bridge",
+      "liquidity",
+      "stake",
+      "dao",
+      "social"
+    ],
+    "style": {
+      "background": "#0b0f19",
+      "card": "#151c2c",
+      "primaryColor": "#4ea1ff",
+      "accent": "#7bd389"
+    }
+  },
+
+  "security": {
+    "walletRequired": true,
+    "signatureAuth": false,
+    "rateLimit": true
+  },
+
+  "backend": {
+    "type": "node_express",
+    "features": [
+      "tx_logging",
+      "tx_lookup",
+      "event_listener_ready"
+    ]
+  }
+}
