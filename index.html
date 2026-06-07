@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ARC Web3 Production Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.umd.min.js"></script>
+
+  <style>
+    body {
+      font-family: Arial;
+      background: #0b0f19;
+      color: white;
+      padding: 20px;
+    }
+
+    .card {
+      background: #151c2c;
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 10px;
+    }
+
+    button {
+      padding: 10px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    input {
+      padding: 8px;
+      margin: 5px;
+      width: 200px;
+    }
+
+    h1 { color: #4ea1ff; }
+    h2 { color: #7bd389; }
+  </style>
+</head>
+
+<body>
+
+<h1>🚀 ARC Web3 Production Dashboard</h1>
+
+<!-- WALLET -->
+<div class="card">
+  <h2>👛 Wallet</h2>
+  <button onclick="connectWallet()">Connect Wallet</button>
+  <p id="wallet">Not connected</p>
+</div>
+
+<!-- NETWORK -->
+<div class="card">
+  <h2>🌐 Network</h2>
+  <button onclick="switchArc()">Switch to Arc Testnet</button>
+</div>
+
+<!-- TRANSFER -->
+<div class="card">
+  <h2>💸 Transfer</h2>
+  <input id="to" placeholder="Receiver address" />
+  <input id="amount" placeholder="Amount (ETH)" />
+  <button onclick="sendTx()">Send</button>
+  <p id="txhash"></p>
+</div>
+
+<!-- SWAP -->
+<div class="card">
+  <h2>🔄 Swap (UI)</h2>
+  <input placeholder="Token A" />
+  <input placeholder="Token B" />
+  <button>Swap</button>
+</div>
+
+<!-- BRIDGE -->
+<div class="card">
+  <h2>🌉 Bridge (UI)</h2>
+  <input placeholder="From Chain" />
+  <input placeholder="To Chain" />
+  <button>Bridge</button>
+</div>
+
+<!-- STAKE -->
+<div class="card">
+  <h2>🏦 Stake</h2>
+  <input placeholder="Amount" />
+  <button>Stake</button>
+  <button>Unstake</button>
+</div>
+
+<!-- DAO -->
+<div class="card">
+  <h2>🏛 DAO</h2>
+  <input id="proposal" placeholder="Proposal text" />
+  <button onclick="createProposal()">Create Proposal</button>
+  <button>Vote YES</button>
+  <button>Vote NO</button>
+</div>
+
+<!-- SOCIAL -->
+<div class="card">
+  <h2>🔗 Social Login</h2>
+  <button>GitHub</button>
+  <button>Twitter</button>
+  <button>Discord</button>
+  <button>Email</button>
+</div>
+
+<script>
+let signer;
+
+// ARC RPC
+const ARC_RPC = "https://rpc.testnet.arc.network";
+
+// CONNECT WALLET
+async function connectWallet() {
+  if (!window.ethereum) return alert("Install MetaMask");
+
+  const provider = new ethers.BrowserProvider(window.ethereum);
+  await provider.send("eth_requestAccounts", []);
+  signer = await provider.getSigner();
+
+  document.getElementById("wallet").innerText =
+    "Connected: " + await signer.getAddress();
+}
+
+// SWITCH NETWORK
+async function switchArc() {
+  await window.ethereum.request({
+    method: "wallet_addEthereumChain",
+    params: [{
+      chainId: "0x4e2b3a",
+      chainName: "Arc Testnet",
+      rpcUrls: [ARC_RPC],
+      nativeCurrency: {
+        name: "USDC",
+        symbol: "USDC",
+        decimals: 18
+      }
+    }]
+  });
+}
+
+// SEND TX
+async function sendTx() {
+  const to = document.getElementById("to").value;
+  const amount = document.getElementById("amount").value;
+
+  try {
+    const tx = await signer.sendTransaction({
+      to,
+      value: ethers.parseEther(amount)
+    });
+
+    document.getElementById("txhash").innerText =
+      "TX Hash: " + tx.hash;
+  } catch (e) {
+    alert(e.message);
+  }
+}
+
+// DAO (mock)
+function createProposal() {
+  const p = document.getElementById("proposal").value;
+  alert("Proposal Created: " + p);
+}
+</script>
+
+</body>
+</html>
