@@ -1,0 +1,17 @@
+import Swap from "@/components/Swap";
+import Bridge from "@/components/Bridge";
+import Stake from "@/components/Stake";
+
+export default function Dashboard() {
+  return (
+    <div>
+
+      <h1>ARC Dashboard</h1>
+
+      <Swap />
+      <Bridge />
+      <Stake />
+
+    </div>
+  );
+}
